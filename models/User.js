@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken');
 var secret = require('../config').secret;
 
 var UserSchema = new mongoose.Schema({
-  username: {type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/^[a-zA-Z0-9]+$/, 'is invalid'], index: true},
+  username: {type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/^[^a-zA-Z0-9\s]+$/, 'is invalid'], index: true},
   email: {type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true},
   bio: String,
   image: String,
@@ -60,7 +60,8 @@ UserSchema.methods.toProfileJSONFor = function(user){
 
 UserSchema.methods.favorite = function(id){
   if(this.favorites.indexOf(id) === -1){
-    this.favorites.push(id);
+    // this.favorites.push(id);
+    this.favorites = this.favorites.concat([id]);
   }
 
   return this.save();
@@ -79,7 +80,8 @@ UserSchema.methods.isFavorite = function(id){
 
 UserSchema.methods.follow = function(id){
   if(this.following.indexOf(id) === -1){
-    this.following.push(id);
+    // this.following.push(id);
+    this.favorites = this.favorites.concat([id]);
   }
 
   return this.save();

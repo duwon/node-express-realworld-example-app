@@ -36,6 +36,12 @@ if(isProduction){
   mongoose.connect('mongodb://localhost/conduit');
   mongoose.set('debug', true);
 }
+const db = mongoose.connection
+db.on('error', console.error)
+db.once('open', ()=>{
+    console.log('connected to mongodb server')
+})
+
 
 require('./models/User');
 require('./models/Article');
@@ -79,6 +85,6 @@ app.use(function(err, req, res, next) {
 });
 
 // finally, let's start our server...
-var server = app.listen( process.env.PORT || 3000, function(){
+var server = app.listen( process.env.PORT || 3001, function(){
   console.log('Listening on port ' + server.address().port);
 });
